@@ -6,6 +6,9 @@ on:
       - main
       - release-*
 
+permissions:
+  contents: write
+
 jobs:
   semver:
     runs-on: ubuntu-latest
