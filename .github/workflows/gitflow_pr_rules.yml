@@ -1,0 +1,59 @@
+name: Enforce GitFlow on Pull Requests
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+jobs:
+  enforce-gitflow:
+    name: Validate GitFlow Rules
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get source and target branches
+        id: context
+        run: |
+          SRC="${{ github.head_ref }}"
+          DEST="${{ github.base_ref }}"
+          echo "🔍 Pull Request from '$SRC' → '$DEST'"
+          echo "src=$SRC" >> $GITHUB_OUTPUT
+          echo "dest=$DEST" >> $GITHUB_OUTPUT
+
+      - name: Validate GitFlow rules
+        run: |
+          SRC="${{ steps.context.outputs.src }}"
+          DEST="${{ steps.context.outputs.dest }}"
+
+          echo "🧩 Validating PR flow: $SRC → $DEST"
+
+          # Feature → develop
+          if [[ "$SRC" =~ ^feature- ]] && [ "$DEST" != "develop" ]; then
+            echo "❌ Invalid PR: Features can only be merged into 'develop'."
+            exit 1
+          fi
+
+          # Bugfix → develop
+          if [[ "$SRC" =~ ^bugfix- ]] && [ "$DEST" != "develop" ]; then
+            echo "❌ Invalid PR: Bugfixes can only be merged into 'develop'."
+            exit 1
+          fi
+
+          # Release → main
+          if [[ "$SRC" =~ ^release- ]] && [ "$DEST" != "main" ]; then
+            echo "❌ Invalid PR: Releases can only be merged into 'main'."
+            exit 1
+          fi
+
+          # Hotfix → main
+          if [[ "$SRC" =~ ^hotfix- ]] && [ "$DEST" != "main" ]; then
+            echo "❌ Invalid PR: Hotfixes can only be merged into 'main'."
+            exit 1
+          fi
+
+          # develop → main (permitido, para promoción)
+          if [ "$SRC" = "develop" ] && [ "$DEST" != "main" ]; then
+            echo "❌ Invalid PR: 'develop' can only be merged into 'main'."
+            exit 1
+          fi
+
+          echo "✅ Valid GitFlow PR: $SRC → $DEST"

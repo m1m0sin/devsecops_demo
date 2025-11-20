@@ -1,0 +1,25 @@
+name: Auto Tag (Semantic Versioning)
+
+on:
+  push:
+    branches:
+      - main
+      - release-*
+
+jobs:
+  semver:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+        
+      - name: Generate next version tag
+        id: tag
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          release_branches: main,release-*
+          default_bump: patch
