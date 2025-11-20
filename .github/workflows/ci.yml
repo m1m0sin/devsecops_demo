@@ -66,6 +66,7 @@ jobs:
           languages: java
 
       - name: Build with Maven
+        working-directory: demo
         run: mvn -B clean install
 
       - name: Perform CodeQL Analysis
