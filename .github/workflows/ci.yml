@@ -35,9 +35,11 @@ jobs:
         run: mvn -v
 
       - name: Build & Test (JUnit + JaCoCo)
+        working-directory: demo
         run: mvn -B clean verify
 
       - name: Run Checkstyle
+        working-directory: demo
         run: mvn -B checkstyle:check
 
       - name: Upload JaCoCo coverage report
