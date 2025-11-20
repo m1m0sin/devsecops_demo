@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug App (Main)",
+            "request": "launch",
+            "mainClass": "com.example.devsecops.App",
+            "projectName": "demo",
+            "cwd": "${workspaceFolder}",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug App (with Arguments)",
+            "request": "launch",
+            "mainClass": "com.example.devsecops.App",
+            "projectName": "demo",
+            "cwd": "${workspaceFolder}",
+            "args": "Alice"
+        }
+    ]
+}
